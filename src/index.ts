@@ -5,6 +5,8 @@ import cors from 'cors'
 
 import authRoutes from './routes/auth.route'
 import cardsRoute from './routes/cards.route'
+import decksRoute from './routes/decks.route'
+
 
 // Create Express app
 export const app = express()
@@ -22,6 +24,8 @@ app.use(express.json())
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/cards', cardsRoute) // route publique pour consulter le catalogue
+app.use('/api/decks', decksRoute)
+
 
 // Serve static files (Socket.io test client)
 app.use(express.static('public'))
