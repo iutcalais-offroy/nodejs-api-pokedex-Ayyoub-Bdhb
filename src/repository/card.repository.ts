@@ -8,3 +8,13 @@ export function findAllCards(): Promise<Card[]> {
     },
   })
 }
+
+export function findCardsByIds(cardIds: number[]): Promise<Card[]> {
+  return prisma.card.findMany({
+    where: {
+      id: {
+        in: cardIds,
+      },
+    },
+  })
+}

@@ -1,7 +1,12 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { env } from '../env'
-import { createUser, findUserByEmail } from '../repository/auth.repository'
+import {
+  createUser,
+  findUserByEmail,
+  findUserByUsername,
+} from '../repository/auth.repository'
+import { HttpError } from '../errors/HttpError'
 
 interface SignUpPayload {
   email: string
@@ -18,15 +23,21 @@ export const signUp = async (payload: SignUpPayload) => {
   const { email, username, password } = payload
 
   if (!email || !username || !password) {
-    throw { status: 400, message: 'Les données sont manquantes.' }
+    throw new HttpError(400, 'Les données sont manquantes.')
   }
 
-  const existingUser = await findUserByEmail(email)
-  if (existingUser) {
-    throw { status: 409, message: "L'Email est utilisé." }
+  const emailExists = await findUserByEmail(email)
+  if (emailExists) {
+    throw new HttpError(409, "L'email est déjà utilisé.")
+  }
+
+  const usernameExists = await findUserByUsername(username)
+  if (usernameExists) {
+    throw new HttpError(409, "Le nom d'utilisateur est déjà utilisé.")
   }
 
   const hashedPassword = await bcrypt.hash(password, 10)
+
   const user = await createUser(email, username, hashedPassword)
 
   const token = jwt.sign(
@@ -35,25 +46,29 @@ export const signUp = async (payload: SignUpPayload) => {
     { expiresIn: '7d' },
   )
 
-  const {...userWithoutPassword } = user
-  return { token, user: userWithoutPassword }
+  const { password: _, ...userWithoutPassword } = user
+
+  return {
+    token,
+    user: userWithoutPassword,
+  }
 }
 
 export const signIn = async (payload: SignInPayload) => {
   const { email, password } = payload
 
   if (!email || !password) {
-    throw { status: 400, message: 'les Données sont manquantes.' }
+    throw new HttpError(400, 'Les données sont manquantes.')
   }
 
   const user = await findUserByEmail(email)
   if (!user) {
-    throw { status: 401, message: 'Les identifiants sont  invalides.' }
+    throw new HttpError(401, 'Identifiants invalides.')
   }
 
   const isValid = await bcrypt.compare(password, user.password)
   if (!isValid) {
-    throw { status: 401, message: 'Les identifiants sont invalides.' }
+    throw new HttpError(401, 'Identifiants invalides.')
   }
 
   const token = jwt.sign(
@@ -62,6 +77,10 @@ export const signIn = async (payload: SignInPayload) => {
     { expiresIn: '7d' },
   )
 
-  const {...userWithoutPassword } = user
-  return { token, user: userWithoutPassword }
+  const { password: _, ...userWithoutPassword } = user
+
+  return {
+    token,
+    user: userWithoutPassword,
+  }
 }

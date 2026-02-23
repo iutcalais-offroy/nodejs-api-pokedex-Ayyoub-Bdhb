@@ -7,11 +7,15 @@ export async function signUpController(req: Request, res: Response) {
     const result = await signUp(req.body)
     return res.status(201).json(result)
   } catch (error) {
+    console.error('sign-up error', error)
+
     if (error instanceof HttpError) {
       return res.status(error.status).json({ error: error.message })
     }
 
-    return res.status(500).json({ error: 'Erreur serveur' })
+    return res.status(500).json({
+      error: 'Erreur serveur',
+    })
   }
 }
 
@@ -20,10 +24,14 @@ export async function signInController(req: Request, res: Response) {
     const result = await signIn(req.body)
     return res.status(200).json(result)
   } catch (error) {
+    console.error('sign-in error', error)
+
     if (error instanceof HttpError) {
       return res.status(error.status).json({ error: error.message })
     }
 
-    return res.status(500).json({ error: 'Erreur serveur' })
+    return res.status(500).json({
+      error: 'Erreur serveur',
+    })
   }
 }
