@@ -1,4 +1,3 @@
-﻿// src/services/deck.service.ts
 import { HttpError } from '../errors/HttpError'
 import {
     createDeck,
@@ -17,6 +16,17 @@ interface CreateDeckPayload {
     userId: number
 }
 
+/**
+ * Crée un nouveau deck pour un utilisateur.
+ *
+ * Vérifie que le nom est renseigné et que le deck contient exactement 10 cartes valides.
+ * Associe ensuite les cartes au deck créé.
+ *
+ * @param {CreateDeckPayload} payload - Données nécessaires à la création du deck.
+ * @returns {Promise<any>} Le deck créé avec ses cartes.
+ *
+ * @throws {HttpError} 400 - Si le nom est manquant ou si les cartes sont invalides.
+ */
 export async function createDeckService(payload: CreateDeckPayload) {
     const { name, cards, userId } = payload
 
@@ -42,10 +52,28 @@ export async function createDeckService(payload: CreateDeckPayload) {
     }
 }
 
+/**
+ * Récupère tous les decks appartenant à un utilisateur.
+ *
+ * @param {number} userId - Identifiant de l'utilisateur connecté.
+ * @returns {Promise<any[]>} Liste des decks de l'utilisateur.
+ */
 export async function getMyDecksService(userId: number) {
     return findDecksByUser(userId)
 }
 
+/**
+ * Récupère un deck par son identifiant.
+ *
+ * Vérifie que le deck existe et qu'il appartient bien à l'utilisateur.
+ *
+ * @param {number} deckId - Identifiant du deck.
+ * @param {number} userId - Identifiant de l'utilisateur connecté.
+ * @returns {Promise<any>} Le deck demandé.
+ *
+ * @throws {HttpError} 404 - Si le deck est introuvable.
+ * @throws {HttpError} 403 - Si l'accès est interdit.
+ */
 export async function getDeckByIdService(deckId: number, userId: number) {
     const deck = await findDeckById(deckId)
 
@@ -60,6 +88,21 @@ export async function getDeckByIdService(deckId: number, userId: number) {
     return deck
 }
 
+/**
+ * Met à jour un deck existant.
+ *
+ * Permet de modifier le nom et/ou les cartes.
+ *
+ * @param {number} deckId - Identifiant du deck.
+ * @param {number} userId - Identifiant de l'utilisateur connecté.
+ * @param {string} [name] - Nouveau nom du deck .
+ * @param {number[]} [cards] - Nouvelle liste de cartes.
+ * @returns {Promise<any>} Le deck mis à jour.
+ *
+ * @throws {HttpError} 404 - Si le deck est introuvable.
+ * @throws {HttpError} 403 - Si l'accès est interdit.
+ * @throws {HttpError} 400 - Si les cartes sont invalides.
+ */
 export async function updateDeckService(
     deckId: number,
     userId: number,
@@ -97,6 +140,18 @@ export async function updateDeckService(
     return findDeckById(deckId)
 }
 
+/**
+ * Supprime un deck.
+ *
+ * Vérifie que le deck existe et qu'il appartient à l'utilisateur avant suppression.
+ *
+ * @param {number} deckId - Identifiant du deck.
+ * @param {number} userId - Identifiant de l'utilisateur connecté.
+ * @returns {Promise<void>}
+ *
+ * @throws {HttpError} 404 - Si le deck est introuvable.
+ * @throws {HttpError} 403 - Si l'accès est interdit.
+ */
 export async function deleteDeckService(deckId: number, userId: number) {
     const deck = await findDeckById(deckId)
 
@@ -109,6 +164,5 @@ export async function deleteDeckService(deckId: number, userId: number) {
     }
 
     await removeCardsFromDeck(deckId)
-
     await deleteDeck(deckId)
 }
