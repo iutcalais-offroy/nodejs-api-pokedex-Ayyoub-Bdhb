@@ -19,6 +19,21 @@ interface SignInPayload {
   password: string
 }
 
+/**
+ * Inscrit un nouvel utilisateur.
+ *
+ * Vérifie la présence des données obligatoires,
+ * contrôle de l'email et du nom d'utilisateur,
+ * chiffre le mot de passe, crée l'utilisateur en base,
+ * puis génère un token JWT valide 7 jours.
+ *
+ * @param {SignUpPayload} payload - Données d'inscription (email, username, password).
+ * @returns {Promise<{ token: string; user: Omit<any, 'password'> }>}
+ * Retourne un token JWT et l'utilisateur créé sans son mot de passe.
+ *
+ * @throws {HttpError} 400 - Si des données sont manquantes.
+ * @throws {HttpError} 409 - Si l'email ou le nom d'utilisateur est déjà utilisé.
+ */
 export const signUp = async (payload: SignUpPayload) => {
   const { email, username, password } = payload
 
@@ -54,6 +69,20 @@ export const signUp = async (payload: SignUpPayload) => {
   }
 }
 
+/**
+ * Authentifie un utilisateur existant.
+ *
+ * Vérifie les identifiants fournis,
+ * compare le mot de passe chiffré,
+ * puis génère un token JWT si l'authentification est valide.
+ *
+ * @param {SignInPayload} payload - Données de connexion (email, password).
+ * @returns {Promise<{ token: string; user: Omit<any, 'password'> }>}
+ * Retourne un token JWT et l'utilisateur authentifié sans son mot de passe.
+ *
+ * @throws {HttpError} 400 - Si des données sont manquantes.
+ * @throws {HttpError} 401 - Si les identifiants sont invalides.
+ */
 export const signIn = async (payload: SignInPayload) => {
   const { email, password } = payload
 
