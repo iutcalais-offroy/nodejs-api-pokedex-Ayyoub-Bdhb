@@ -1,0 +1,63 @@
+﻿paths:
+  /decks:
+    post:
+      summary: Créer un deck
+      tags:
+        - Decks
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                cards:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '201':
+          description: Deck créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deck'
+        '400':
+          description: Données invalides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Accès interdit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /decks/mine:
+    get:
+      summary: Récupérer tous les decks de l'utilisateur
+      tags:
+        - Decks
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste de decks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deck'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

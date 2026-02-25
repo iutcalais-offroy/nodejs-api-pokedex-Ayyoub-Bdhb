@@ -7,6 +7,10 @@ import authRoutes from './routes/auth.route'
 import cardsRoute from './routes/cards.route'
 import decksRoute from './routes/decks.route'
 
+import { setupSwagger } from './swagger'
+import { setupMatchmaking } from './matchmaking'
+
+
 
 // Create Express app
 export const app = express()
@@ -26,8 +30,10 @@ app.use('/api/auth', authRoutes)
 app.use('/api/cards', cardsRoute) // route publique pour consulter le catalogue
 app.use('/api/decks', decksRoute)
 
+// Swagger documentation
+setupSwagger(app)
 
-// Serve static files (Socket.io test client)
+// Server static files (Socket.io test client)
 app.use(express.static('public'))
 
 // Health check endpoint
@@ -46,6 +52,8 @@ if (require.main === module) {
         `🧪 Socket.io Test Client available at http://localhost:${env.PORT}`,
       )
     })
+   // initialize matchmaking (socket.io)
+   setupMatchmaking(httpServer)
   } catch (error) {
     console.error('Failed to start server:', error)
     process.exit(1)

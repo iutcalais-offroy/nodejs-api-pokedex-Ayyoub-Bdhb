@@ -25,6 +25,18 @@ export function findUserByUsername(username: string) {
 }
 
 /**
+ * Recherche un utilisateur par son identifiant.
+ *
+ * @param {number} id - Identifiant de l'utilisateur.
+ * @returns {Promise<User | null>} L'utilisateur trouvé ou null si inexistant.
+ */
+export function findUserById(id: number) {
+  return prisma.user.findUnique({
+    where: { id },
+  })
+}
+
+/**
  * Crée un nouvel utilisateur en base de données.
  *
  * @param {string} email - Email de l'utilisateur.
