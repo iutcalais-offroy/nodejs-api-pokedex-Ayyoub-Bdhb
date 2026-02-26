@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { prismaMock } from './vitest.setup'
 import { signUp, signIn } from '../services/auth.service'
 import { findUserByEmail, createUser, findUserByUsername } from '../repository/auth.repository'
@@ -15,66 +15,74 @@ beforeEach(() => {
     vi.clearAllMocks()
 })
 
-describe('Auth service', () => {
-    const mockUser = {
+describe('Service d\'authentification', () => {
+    const utilisateurMock = {
         id: 1,
-        username: 'TestUser',
+        username: 'UtilisateurTest',
         email: 'test@example.com',
         password: 'hashedpassword',
         createdAt: new Date(),
         updatedAt: new Date(),
     }
 
-    it('should signup a user successfully', async () => {
-        ; (findUserByEmail as any).mockResolvedValue(null)
-        ; (createUser as any).mockResolvedValue(mockUser)
-        prismaMock.user.create.mockResolvedValue(mockUser)
+    it("devrait inscrire un utilisateur avec succès", async () => {
+        const trouveUtilisateurParEmailMock = findUserByEmail as Inconnu as ReturnType<typeof vi.fn>
+        const creerUtilisateurMock = createUser as Inconnu as ReturnType<typeof vi.fn>
+        trouveUtilisateurParEmailMock.mockResolvedValue(null)
+        creerUtilisateurMock.mockResolvedValue(utilisateurMock)
+        prismaMock.user.create.mockResolvedValue(utilisateurMock)
 
-        const result = await signUp({
-            username: 'TestUser',
+        const resultat = await signUp({
+            username: 'UtilisateurTest',
             email: 'test@example.com',
             password: 'password123'
         })
 
-        expect(result).toHaveProperty('token')
-        expect(result.user).toHaveProperty('id', 1)
-        expect(result.user).toHaveProperty('email', 'test@example.com')
-        expect(result.user).toHaveProperty('username', 'TestUser')
+        expect(resultat).toHaveProperty('token')
+        expect(resultat.user).toHaveProperty('id', 1)
+        expect(resultat.user).toHaveProperty('email', 'test@example.com')
+        expect(resultat.user).toHaveProperty('username', 'UtilisateurTest')
     })
 
-    it('should fail if email already exists', async () => {
-        ; (findUserByEmail as any).mockResolvedValue(mockUser)
+    it("échoue si l'email existe déjà", async () => {
+        const trouveUtilisateurParEmailMock = findUserByEmail as Inconnu as ReturnType<typeof vi.fn>
+        trouveUtilisateurParEmailMock.mockResolvedValue(utilisateurMock)
 
         await expect(
             signUp({
-                username: 'TestUser',
+                username: 'UtilisateurTest',
                 email: 'test@example.com',
                 password: 'password123'
             })
         ).rejects.toBeInstanceOf(HttpError)
     })
 
-    it('should fail if username already exists', async () => {
-        ; (findUserByEmail as any).mockResolvedValue(null)
-        ; (findUserByUsername as any).mockResolvedValue(mockUser)
+    it("échoue si le pseudo existe déjà", async () => {
+        const trouveUtilisateurParEmailMock = findUserByEmail as Inconnu as ReturnType<typeof vi.fn>
+        const trouveUtilisateurParPseudoMock = findUserByUsername as Inconnu as ReturnType<typeof vi.fn>
+        trouveUtilisateurParEmailMock.mockResolvedValue(null)
+        trouveUtilisateurParPseudoMock.mockResolvedValue(utilisateurMock)
 
         await expect(
-            signUp({ username: 'TestUser', email: 'test2@example.com', password: 'password' })
+            signUp({ username: 'UtilisateurTest', email: 'test2@example.com', password: 'password' })
         ).rejects.toBeInstanceOf(HttpError)
     })
 
-    it('should signin successfully', async () => {
-        const stored = { ...mockUser, password: 'hashed' }
-        ; (findUserByEmail as any).mockResolvedValue(stored)
-        vi.spyOn(bcrypt, 'compare').mockResolvedValue(true as any)
+    it("devrait s'authentifier avec succès", async () => {
+        const stored = { ...utilisateurMock, password: 'hashed' }
+        const trouveUtilisateurParEmailMock = findUserByEmail as Inconnu as ReturnType<typeof vi.fn>
+        trouveUtilisateurParEmailMock.mockResolvedValue(stored)
+        const bcryptTyped = bcrypt as Inconnu as { compare: (a: string, b: string) => Promise<boolean> }
+        vi.spyOn(bcryptTyped, 'compare').mockResolvedValue(true)
 
-        const result = await signIn({ email: 'test@example.com', password: 'password123' })
-        expect(result).toHaveProperty('token')
-        expect(result.user).toHaveProperty('email', 'test@example.com')
+        const resultat = await signIn({ email: 'test@example.com', password: 'password123' })
+        expect(resultat).toHaveProperty('token')
+        expect(resultat.user).toHaveProperty('email', 'test@example.com')
     })
 
-    it('should fail signin with invalid credentials', async () => {
-        ; (findUserByEmail as any).mockResolvedValue(null)
+    it("échoue lors de l'authentification avec des identifiants invalides", async () => {
+        const trouveUtilisateurParEmailMock = findUserByEmail as Inconnu as ReturnType<typeof vi.fn>
+        trouveUtilisateurParEmailMock.mockResolvedValue(null)
 
         await expect(signIn({ email: 'noone@example.com', password: 'x' })).rejects.toBeInstanceOf(HttpError)
     })

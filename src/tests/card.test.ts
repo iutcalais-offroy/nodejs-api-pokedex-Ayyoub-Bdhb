@@ -15,8 +15,8 @@ type CardType = {
     updatedAt: Date
 }
 
-describe('Card repository', () => {
-    const mockCard: CardType = {
+describe('Dépôt des cartes', () => {
+    const carteFausse: CardType = {
         id: 1,
         name: 'Pikachu',
         hp: 35,
@@ -28,12 +28,12 @@ describe('Card repository', () => {
         updatedAt: new Date(),
     }
 
-    it('should return all cards', async () => {
-        prismaMock.card.findMany.mockResolvedValue([mockCard])
+    it('devrait retourner toutes les cartes', async () => {
+        prismaMock.card.findMany.mockResolvedValue([carteFausse])
 
-        const cards = await findAllCards()
-        expect(cards.length).toBe(1)
-        expect(cards[0].name).toBe('Pikachu')
-        expect(cards[0].type).toBe(PokemonType.Electric)
+        const cartes = await findAllCards()
+        expect(cartes.length).toBe(1)
+        expect(cartes[0].name).toBe('Pikachu')
+        expect(cartes[0].type).toBe(PokemonType.Electric)
     })
 })

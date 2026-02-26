@@ -7,8 +7,8 @@ import authRoutes from './routes/auth.route'
 import cardsRoute from './routes/cards.route'
 import decksRoute from './routes/decks.route'
 
-import { setupSwagger } from './swagger'
-import { setupMatchmaking } from './matchmaking'
+import { setupSwagger } from './docs'
+import { configurerMatchmaking } from './socket/matchmaking'
 
 
 
@@ -52,8 +52,8 @@ if (require.main === module) {
         `🧪 Socket.io Test Client available at http://localhost:${env.PORT}`,
       )
     })
-   // initialize matchmaking (socket.io)
-   setupMatchmaking(httpServer)
+  // initialiser le matchmaking (socket.io)
+  configurerMatchmaking(httpServer)
   } catch (error) {
     console.error('Failed to start server:', error)
     process.exit(1)
