@@ -3,8 +3,14 @@ import YAML from 'yamljs'
 import { Express } from 'express'
 import path from 'path'
 
-const loadYaml = (filePath: string): Record<string, any> => {
-    return YAML.load(filePath) as Record<string, any>
+interface SwaggerDoc {
+    paths?: Record<string, unknown>
+    components?: Record<string, unknown>
+    [key: string]: unknown
+}
+
+const loadYaml = (filePath: string): SwaggerDoc => {
+    return YAML.load(filePath) as SwaggerDoc
 }
 
 const swaggerDocument = loadYaml(
@@ -24,17 +30,17 @@ const deckDoc = loadYaml(
 )
 
 swaggerDocument.paths = {
-    ...(swaggerDocument.paths || {}),
-    ...(authDoc.paths || {}),
-    ...(cardDoc.paths || {}),
-    ...(deckDoc.paths || {}),
+    ...(swaggerDocument.paths ?? {}),
+    ...(authDoc.paths ?? {}),
+    ...(cardDoc.paths ?? {}),
+    ...(deckDoc.paths ?? {}),
 }
 
 swaggerDocument.components = {
-    ...(swaggerDocument.components || {}),
-    ...(authDoc.components || {}),
-    ...(cardDoc.components || {}),
-    ...(deckDoc.components || {}),
+    ...(swaggerDocument.components ?? {}),
+    ...(authDoc.components ?? {}),
+    ...(cardDoc.components ?? {}),
+    ...(deckDoc.components ?? {}),
 }
 
 export const setupSwagger = (app: Express) => {
