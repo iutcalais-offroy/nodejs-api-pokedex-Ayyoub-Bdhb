@@ -28,7 +28,7 @@ interface SignInPayload {
  * puis génère un token JWT valide 7 jours.
  *
  * @param {SignUpPayload} payload - Données d'inscription (email, username, password).
- * @returns {Promise<{ token: string; user: Omit<any, 'password'> }>}
+ * @returns {Promise<{ token: string; user: Omit<Inconnu, 'password'> }>}
  * Retourne un token JWT et l'utilisateur créé sans son mot de passe.
  *
  * @throws {HttpError} 400 - Si des données sont manquantes.
@@ -77,7 +77,7 @@ export const signUp = async (payload: SignUpPayload) => {
  * puis génère un token JWT si l'authentification est valide.
  *
  * @param {SignInPayload} payload - Données de connexion (email, password).
- * @returns {Promise<{ token: string; user: Omit<any, 'password'> }>}
+ * @returns {Promise<{ token: string; user: Omit<Inconnu, 'password'> }>}
  * Retourne un token JWT et l'utilisateur authentifié sans son mot de passe.
  *
  * @throws {HttpError} 400 - Si des données sont manquantes.

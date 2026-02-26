@@ -7,7 +7,7 @@ vi.mock('../database', () => ({
   prisma: mockDeep<PrismaClient>(),
 }))
 
-export const prismaMock = prisma as unknown as DeepMockProxy<PrismaClient>
+export const prismaMock = prisma as Inconnu as DeepMockProxy<PrismaClient>
 
 beforeEach(() => {
   vi.clearAllMocks()

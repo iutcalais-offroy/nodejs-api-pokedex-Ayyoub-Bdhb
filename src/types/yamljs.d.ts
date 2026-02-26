@@ -1,7 +1,7 @@
-﻿declare module 'yamljs' {
+declare module 'yamljs' {
   const YAML: {
-    load(path: string): any;
-    parse(str: string): any;
+    load(path: string): Inconnu;
+    parse(str: string): Inconnu;
   };
   export default YAML;
 }

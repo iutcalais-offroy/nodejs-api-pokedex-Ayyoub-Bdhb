@@ -5,7 +5,7 @@ import { findAllCards } from '../repository/card.repository'
  *
  * Interroge la base de données pour retourner toutes les cartes disponibles.
  *
- * @returns {Promise<any[]>} Liste complète des cartes.
+ * @returns {Promise<Inconnu[]>} Liste complète des cartes.
  *
  * @throws {Error} 500 - En cas d'erreur serveur lors de la récupération.
  */

@@ -1,14 +1,14 @@
 import { PokemonType } from '../generated/prisma/client'
 
 /**
- * Règles du jeu Pokemon TCG
- * Contient les fonctions pures pour le calcul des dégâts et le système de types
+ * Règles du jeu Pokemon TCG (version française)
+ * Fonctions pures pour le calcul des dégâts et le système de types
  */
 
 /**
  * Retourne la faiblesse principale d'un type Pokemon
  */
-export function getWeakness(defenderType: PokemonType): PokemonType | null {
+export function obtenirFaiblesse(defenderType: PokemonType): PokemonType | null {
   switch (defenderType) {
     case PokemonType.Normal:
       return PokemonType.Fighting
@@ -54,14 +54,14 @@ export function getWeakness(defenderType: PokemonType): PokemonType | null {
 /**
  * Calcule le multiplicateur de dégâts selon les types
  */
-export function getDamageMultiplier(
+export function obtenirMultiplicateurDegats(
   attackerType: PokemonType,
   defenderType: PokemonType,
 ): number {
-  const weakness = getWeakness(defenderType)
+  const faiblesse = obtenirFaiblesse(defenderType)
 
   // Si le type de l'attaquant correspond à la faiblesse du défenseur
-  if (weakness === attackerType) {
+  if (faiblesse === attackerType) {
     return 2.0 // Super efficace (x2 dégâts)
   }
 
@@ -71,14 +71,14 @@ export function getDamageMultiplier(
 /**
  * Calcule les dégâts infligés lors d'une attaque
  */
-export function calculateDamage(
-  attackerAttack: number,
-  attackerType: PokemonType,
-  defenderType: PokemonType,
+export function calculerDegats(
+  attaqueAttaquante: number,
+  typeAttaquant: PokemonType,
+  typeDefenseur: PokemonType,
 ): number {
-  const multiplier = getDamageMultiplier(attackerType, defenderType)
+  const multiplicateur = obtenirMultiplicateurDegats(typeAttaquant, typeDefenseur)
 
-  const damage = Math.floor(attackerAttack * multiplier)
+  const degats = Math.floor(attaqueAttaquante * multiplicateur)
 
-  return Math.max(1, damage)
+  return Math.max(1, degats)
 }

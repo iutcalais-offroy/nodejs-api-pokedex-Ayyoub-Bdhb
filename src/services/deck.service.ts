@@ -23,7 +23,7 @@ interface CreateDeckPayload {
  * Associe ensuite les cartes au deck créé.
  *
  * @param {CreateDeckPayload} payload - Données nécessaires à la création du deck.
- * @returns {Promise<any>} Le deck créé avec ses cartes.
+ * @returns {Promise<Inconnu>} Le deck créé avec ses cartes.
  *
  * @throws {HttpError} 400 - Si le nom est manquant ou si les cartes sont invalides.
  */
@@ -56,7 +56,7 @@ export async function createDeckService(payload: CreateDeckPayload) {
  * Récupère tous les decks appartenant à un utilisateur.
  *
  * @param {number} userId - Identifiant de l'utilisateur connecté.
- * @returns {Promise<any[]>} Liste des decks de l'utilisateur.
+ * @returns {Promise<Inconnu[]>} Liste des decks de l'utilisateur.
  */
 export async function getMyDecksService(userId: number) {
     return findDecksByUser(userId)
@@ -69,7 +69,7 @@ export async function getMyDecksService(userId: number) {
  *
  * @param {number} deckId - Identifiant du deck.
  * @param {number} userId - Identifiant de l'utilisateur connecté.
- * @returns {Promise<any>} Le deck demandé.
+ * @returns {Promise<Inconnu>} Le deck demandé.
  *
  * @throws {HttpError} 404 - Si le deck est introuvable.
  * @throws {HttpError} 403 - Si l'accès est interdit.
@@ -97,7 +97,7 @@ export async function getDeckByIdService(deckId: number, userId: number) {
  * @param {number} userId - Identifiant de l'utilisateur connecté.
  * @param {string} [name] - Nouveau nom du deck .
  * @param {number[]} [cards] - Nouvelle liste de cartes.
- * @returns {Promise<any>} Le deck mis à jour.
+ * @returns {Promise<Inconnu>} Le deck mis à jour.
  *
  * @throws {HttpError} 404 - Si le deck est introuvable.
  * @throws {HttpError} 403 - Si l'accès est interdit.
